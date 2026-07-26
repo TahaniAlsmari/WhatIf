@@ -1,0 +1,421 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>WHATIF | إنشاء حساب</title>
+
+    <link
+        rel="stylesheet"
+        href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    >
+
+    <link
+        rel="stylesheet"
+        href="{% static 'accounts/css/auth.css' %}"
+    >
+</head>
+
+<body>
+
+<section class="auth-page register-page">
+
+
+    <div
+        class="auth-background-arrows"
+        aria-hidden="true"
+    >
+
+        <svg
+            viewBox="0 0 1500 900"
+            preserveAspectRatio="xMidYMid slice"
+        >
+
+ <defs>
+
+    <linearGradient
+        id="authOliveGradient"
+        x1="0%"
+        y1="100%"
+        x2="100%"
+        y2="0%"
+    >
+        <stop offset="0%" stop-color="#292C19"/>
+        <stop offset="55%" stop-color="#4F5328"/>
+        <stop offset="100%" stop-color="#77783D"/>
+    </linearGradient>
+
+    <linearGradient
+        id="authGoldGradient"
+        x1="0%"
+        y1="100%"
+        x2="100%"
+        y2="0%"
+    >
+        <stop offset="0%" stop-color="#8E7A32"/>
+        <stop offset="50%" stop-color="#C59A42"/>
+        <stop offset="100%" stop-color="#D9B866"/>
+    </linearGradient>
+
+    <linearGradient
+        id="authBeigeGradient"
+        x1="0%"
+        y1="100%"
+        x2="100%"
+        y2="0%"
+    >
+        <stop offset="0%" stop-color="#9F8D76"/>
+        <stop offset="50%" stop-color="#B7A58F"/>
+        <stop offset="100%" stop-color="#D4C6B6"/>
+    </linearGradient>
+
+    <filter
+        id="authArrowGlow"
+        x="-50%"
+        y="-50%"
+        width="200%"
+        height="200%"
+    >
+        <feGaussianBlur
+            stdDeviation="4"
+            result="blur"
+        />
+
+        <feMerge>
+            <feMergeNode in="blur"/>
+            <feMergeNode in="SourceGraphic"/>
+        </feMerge>
+    </filter>
+
+</defs>
+
+
+
+            <path
+                class="auth-arrow auth-arrow-one"
+                d="
+                    M-180 900
+                    C140 820 280 700 340 540
+                    C395 390 325 235 245 110
+                "
+            />
+
+            <polygon
+                class="auth-arrow-head auth-head-one"
+                points="
+                    218,86
+                    198,145
+                    260,110
+                "
+            />
+
+
+
+            <path
+                class="auth-arrow auth-arrow-two"
+                d="
+                    M120 980
+                    C320 860 470 710 560 560
+                    C620 450 620 320 680 120
+                "
+            />
+
+            <polygon
+                class="auth-arrow-head auth-head-two"
+                points="
+                    653,82
+                    633,148
+                    700,112
+                "
+            />
+
+
+
+            <path
+                class="auth-arrow auth-arrow-three"
+                d="
+                    M760 980
+                    C810 810 900 690 1005 590
+                    C1110 490 1170 330 1110 110
+                "
+            />
+
+            <polygon
+                class="auth-arrow-head auth-head-three"
+                points="
+                    1082,78
+                    1062,145
+                    1130,108
+                "
+            />
+
+        </svg>
+
+    </div>
+
+
+
+
+
+
+    <main class="auth-card register-card">
+
+        <header class="auth-header">
+
+            <h1>
+                أنشئ حسابك
+            </h1>
+
+            <p>
+                ابدأ بتحليل القرارات وفهم المخاطر قبل تنفيذها.
+            </p>
+
+        </header>
+
+
+        {% if form.non_field_errors %}
+
+            <div class="auth-error auth-error-main">
+
+                <i class="bi bi-exclamation-circle"></i>
+
+                <div>
+
+                    {% for error in form.non_field_errors %}
+                        <p>{{ error }}</p>
+                    {% endfor %}
+
+                </div>
+
+            </div>
+
+        {% endif %}
+
+
+        <form
+            method="POST"
+            class="auth-form"
+        >
+
+            {% csrf_token %}
+
+
+
+            <div class="auth-field">
+
+                <label for="{{ form.username.id_for_label }}">
+                    اسم المستخدم
+                </label>
+
+                <div class="auth-input-wrapper">
+
+                    <i class="bi bi-person"></i>
+
+                    {{ form.username }}
+
+                </div>
+
+                {% if form.username.errors %}
+
+                    <div class="auth-field-error">
+
+                        {% for error in form.username.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="auth-field">
+
+                <label for="{{ form.password1.id_for_label }}">
+                    كلمة المرور
+                </label>
+
+                <div class="auth-input-wrapper">
+
+                    <i class="bi bi-lock"></i>
+
+                    {{ form.password1 }}
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="{{ form.password1.id_for_label }}"
+                        aria-label="إظهار أو إخفاء كلمة المرور"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                </div>
+
+                {% if form.password1.errors %}
+
+                    <div class="auth-field-error">
+
+                        {% for error in form.password1.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="auth-field">
+
+                <label for="{{ form.password2.id_for_label }}">
+                    تأكيد كلمة المرور
+                </label>
+
+                <div class="auth-input-wrapper">
+
+                    <i class="bi bi-shield-lock"></i>
+
+                    {{ form.password2 }}
+
+                    <button
+                        type="button"
+                        class="password-toggle"
+                        data-target="{{ form.password2.id_for_label }}"
+                        aria-label="إظهار أو إخفاء كلمة المرور"
+                    >
+                        <i class="bi bi-eye"></i>
+                    </button>
+
+                </div>
+
+                {% if form.password2.errors %}
+
+                    <div class="auth-field-error">
+
+                        {% for error in form.password2.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+
+                    </div>
+
+                {% endif %}
+
+            </div>
+
+
+
+            <div class="password-guidelines">
+
+                <span>
+                    <i class="bi bi-check-circle"></i>
+                    لا تقل عن 8 أحرف
+                </span>
+
+                <span>
+                    <i class="bi bi-check-circle"></i>
+                    لا تكون مشابهة لاسم المستخدم
+                </span>
+
+                <span>
+                    <i class="bi bi-check-circle"></i>
+                    لا تكون رقمية بالكامل
+                </span>
+
+            </div>
+
+
+
+            <button
+                type="submit"
+                class="auth-submit"
+            >
+
+                <span>
+                    إنشاء الحساب
+                </span>
+
+                <i class="bi bi-arrow-left"></i>
+
+            </button>
+
+        </form>
+
+
+        <div class="auth-divider">
+            <span>أو</span>
+        </div>
+
+
+        <p class="auth-switch">
+
+            لديك حساب بالفعل؟
+
+            <a href="{% url 'login' %}">
+                تسجيل الدخول
+            </a>
+
+        </p>
+
+    </main>
+
+</section>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const passwordButtons =
+        document.querySelectorAll(".password-toggle");
+
+    passwordButtons.forEach(function (button) {
+
+        button.addEventListener("click", function () {
+
+            const inputId =
+                button.getAttribute("data-target");
+
+            const input =
+                document.getElementById(inputId);
+
+            const icon =
+                button.querySelector("i");
+
+            if (!input) {
+                return;
+            }
+
+            const isPassword =
+                input.type === "password";
+
+            input.type =
+                isPassword
+                    ? "text"
+                    : "password";
+
+            icon.className =
+                isPassword
+                    ? "bi bi-eye-slash"
+                    : "bi bi-eye";
+        });
+
+    });
+
+});
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,228 @@
+{% extends "ml_app/base.html" %}
+
+{% block title %}
+WHATIF | لوحة القرارات
+{% endblock %}
+
+{% block body_class %}
+dashboard-page
+{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+    <div class="flow-waves" aria-hidden="true">
+
+        <svg viewBox="0 0 1440 260" preserveAspectRatio="none">
+
+            <defs>
+                <linearGradient
+                    id="waveGradient"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="0"
+                >
+                    <stop
+                        offset="0%"
+                        stop-color="#E8D6BE"
+                        stop-opacity=".38"
+                    />
+
+                    <stop
+                        offset="50%"
+                        stop-color="#4E8A67"
+                        stop-opacity=".52"
+                    />
+
+                    <stop
+                        offset="100%"
+                        stop-color="#F2B33D"
+                        stop-opacity=".25"
+                    />
+                </linearGradient>
+            </defs>
+
+            <path
+                class="wave-line wave-1"
+                d="M0 170 C250 80 420 250 700 155 C970 65 1160 230 1440 130"
+            />
+
+            <path
+                class="wave-line wave-2"
+                d="M0 195 C270 105 470 265 720 180 C990 90 1180 245 1440 155"
+            />
+
+            <path
+                class="wave-line wave-3"
+                d="M0 220 C260 130 480 280 750 205 C1040 120 1200 260 1440 185"
+            />
+
+        </svg>
+
+    </div>
+
+    <header class="page-header">
+
+        <div>
+
+            <h1>لوحة القرارات</h1>
+
+        </div>
+
+        <a
+            href="{% url 'predict' %}"
+            class="primary-action"
+        >
+            <i class="bi bi-plus-lg"></i>
+            قرار جديد
+        </a>
+
+    </header>
+
+    <section class="summary-grid">
+
+        <article class="summary-card">
+
+            <span class="summary-icon violet">
+                <i class="bi bi-clipboard-data"></i>
+            </span>
+
+            <div>
+                <small>إجمالي القرارات</small>
+
+                <strong data-counter="{{ total_decisions|default:0 }}">
+                    0
+                </strong>
+            </div>
+
+        </article>
+
+        <article class="summary-card">
+
+            <span class="summary-icon green">
+                <i class="bi bi-shield-check"></i>
+            </span>
+
+            <div>
+                <small>منخفضة الخطورة</small>
+
+                <strong data-counter="{{ low_count|default:0 }}">
+                    0
+                </strong>
+            </div>
+
+        </article>
+
+        <article class="summary-card">
+
+            <span class="summary-icon amber">
+                <i class="bi bi-exclamation-circle"></i>
+            </span>
+
+            <div>
+                <small>متوسطة الخطورة</small>
+
+                <strong data-counter="{{ medium_count|default:0 }}">
+                    0
+                </strong>
+            </div>
+
+        </article>
+
+        <article class="summary-card">
+
+            <span class="summary-icon coral">
+                <i class="bi bi-exclamation-triangle"></i>
+            </span>
+
+            <div>
+                <small>مرتفعة الخطورة</small>
+
+                <strong data-counter="{{ high_count|default:0 }}">
+                    0
+                </strong>
+            </div>
+
+        </article>
+
+    </section>
+
+    <section class="glass-panel history-panel">
+
+        {% if records %}
+
+        <div class="table-responsive">
+
+            <table class="decision-table">
+
+                <thead>
+                    <tr>
+                        <th>القرار</th>
+                        <th>مستوى الخطورة</th>
+                        <th>التاريخ</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+
+                    {% for record in records %}
+
+                    <tr>
+
+                        <td class="decision-cell">
+                            <span class="decision-dot"></span>
+                            {{ record.decision_text }}
+                        </td>
+
+                        <td>
+                            <span class="risk-pill risk-{{ record.risk_level }}">
+                                {{ record.risk_level }}
+                            </span>
+                        </td>
+
+                        <td class="date-cell">
+                            {{ record.created_at|date:"Y-m-d H:i" }}
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                </tbody>
+
+            </table>
+
+        </div>
+
+        {% else %}
+
+        <div class="empty-state">
+
+            <span>
+                <i class="bi bi-inbox"></i>
+            </span>
+
+            <h3>لا يوجد سجل قرارات سابق</h3>
+
+            <p>
+                ابدأ بتحليل قرار جديد وسيظهر هنا مباشرة.
+            </p>
+
+            <a
+                href="{% url 'predict' %}"
+                class="primary-action"
+            >
+                تحليل أول قرار
+            </a>
+
+        </div>
+
+        {% endif %}
+
+    </section>
+
+</section>
+
+{% endblock %}

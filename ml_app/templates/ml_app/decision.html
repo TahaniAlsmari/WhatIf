@@ -1,0 +1,608 @@
+{% extends "ml_app/base.html" %}
+
+{% block title %}
+WHATIF | تحليل القرار
+{% endblock %}
+
+{% block body_class %}
+decision-page
+{% endblock %}
+
+{% block extra_head %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+{% endblock %}
+
+{% block content %}
+
+<section class="page-shell">
+
+
+    <div class="flow-waves" aria-hidden="true">
+
+        <svg viewBox="0 0 1440 260" preserveAspectRatio="none">
+
+            <defs>
+                <linearGradient
+                    id="decisionWaveGradient"
+                    x1="0"
+                    y1="0"
+                    x2="1"
+                    y2="0"
+                >
+                    <stop
+                        offset="0%"
+                        stop-color="#E8D6BE"
+                        stop-opacity=".38"
+                    />
+
+                    <stop
+                        offset="50%"
+                        stop-color="#4E8A67"
+                        stop-opacity=".52"
+                    />
+
+                    <stop
+                        offset="100%"
+                        stop-color="#F2B33D"
+                        stop-opacity=".25"
+                    />
+                </linearGradient>
+            </defs>
+
+            <path
+                class="wave-line decision-wave wave-1"
+                d="M0 170 C250 80 420 250 700 155 C970 65 1160 230 1440 130"
+            />
+
+            <path
+                class="wave-line decision-wave wave-2"
+                d="M0 195 C270 105 470 265 720 180 C990 90 1180 245 1440 155"
+            />
+
+            <path
+                class="wave-line decision-wave wave-3"
+                d="M0 220 C260 130 480 280 750 205 C1040 120 1200 260 1440 185"
+            />
+
+        </svg>
+
+    </div>
+
+
+
+    <header class="page-header">
+
+        <div>
+
+            <h1>
+                القرار الجديد
+            </h1>
+
+            <p>
+                اكتب القرار باللغة العربية وسيقوم النظام بتحليله.
+            </p>
+        </div>
+
+        <a
+            href="{% url 'dashboard' %}"
+            class="secondary-action"
+        >
+            <i class="bi bi-arrow-right"></i>
+            الرجوع للسجل
+        </a>
+
+    </header>
+
+
+
+    <section class="glass-panel decision-form-panel">
+    {% if input_error %}
+    <div
+        class="alert alert-warning border-0 rounded-4 mb-4"
+        role="alert"
+    >
+        <div class="d-flex align-items-start gap-2">
+            <i class="bi bi-exclamation-circle-fill mt-1"></i>
+
+            <div>
+                <strong class="d-block mb-1">
+                    تعذر تحليل القرار
+                </strong>
+
+                <span>
+                    {{ input_error }}
+                </span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+        <form
+            method="POST"
+            action="{% url 'predict' %}"
+            id="decisionForm"
+        >
+
+            {% csrf_token %}
+
+            <label
+                for="decisionText"
+                class="form-title"
+            >
+                اكتب قرارك هنا
+            </label>
+
+            <div class="textarea-shell">
+
+            <textarea
+                id="decisionText"
+                name="text"
+                maxlength="1000"
+                placeholder="اكتب القرار مع تكلفته التقديرية، مثال: شراء معدات بقيمة 50000 ريال"
+                rows="5"
+                class="form-control"
+                required
+            >{{ entered_text|default_if_none:"" }}</textarea>
+                <span class="character-counter">
+                    <b id="charCount">0</b>
+                    /
+                    1000
+                </span>
+
+            </div>
+
+            <button
+                type="submit"
+                class="primary-action analyze-button"
+                id="analyzeButton"
+            >
+
+                <span class="button-label">
+                    <i class="bi bi-stars"></i>
+                    تحليل القرار
+                </span>
+
+                <span class="button-loading">
+                    <span class="spark-loader"></span>
+                    جاري التحليل
+                </span>
+
+            </button>
+
+        </form>
+
+    </section>
+
+
+
+    <section
+        class="analysis-overlay"
+        id="analysisOverlay"
+        aria-hidden="true"
+    >
+
+        <div class="analysis-card">
+
+            <div class="analysis-orbit">
+
+                <span></span>
+                <span></span>
+                <span></span>
+
+                <i class="bi bi-stars"></i>
+
+            </div>
+
+            <h3>
+                نحلّل القرار الآن
+            </h3>
+
+            <div class="analysis-steps">
+
+                <p class="active">
+                    <i class="bi bi-stars"></i>
+                    فهم القرار بواسطة Gemini
+                </p>
+
+                <p>
+                    <i class="bi bi-circle"></i>
+                    تقييم المخاطر بواسطة CatBoost
+                </p>
+
+                <p>
+                    <i class="bi bi-circle"></i>
+                    تفسير العوامل باستخدام SHAP
+                </p>
+
+                <p>
+                    <i class="bi bi-circle"></i>
+                    إنشاء توصية بديلة
+                </p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+
+    {% if decision %}
+
+
+    <section
+        class="result-section"
+        id="resultSection"
+    >
+
+
+        <article class="result-hero result-{{ risk }}">
+
+            <div class="risk-emblem">
+
+                {% if risk == "منخفض" %}
+
+                    <i class="bi bi-shield-check"></i>
+
+                {% elif risk == "متوسط" %}
+
+                    <i class="bi bi-exclamation-triangle"></i>
+
+                {% else %}
+
+                    <i class="bi bi-exclamation-octagon"></i>
+
+                {% endif %}
+
+            </div>
+
+            <span class="eyebrow">
+                مستوى الخطورة
+            </span>
+
+            <h2>
+                {{ decision }}
+            </h2>
+
+            {% if decision_cost %}
+
+                <p class="result-cost">
+                    تكلفة القرار:
+                    <strong>
+                        {{ decision_cost|floatformat:0 }}
+                        ريال
+                    </strong>
+                </p>
+
+            {% endif %}
+
+            <span class="risk-pill risk-{{ risk }}">
+                {{ risk }}
+            </span>
+
+        </article>
+
+
+        {% if risk == "منخفض" %}
+
+
+            <article class="glass-panel result-card safe-result reveal-card">
+
+                <div class="section-heading">
+
+                    <span class="section-icon green">
+                        <i class="bi bi-check2-circle"></i>
+                    </span>
+
+                    <div>
+
+                        <h3>
+                            القرار آمن ويمكن تنفيذه
+                        </h3>
+
+                        <p>
+                            {{ gemini.message }}
+                        </p>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        {% else %}
+
+
+            <div class="result-grid">
+
+
+                <article class="glass-panel result-card reveal-card">
+
+                    <div class="section-heading">
+
+                        <span class="section-icon coral">
+                            <i class="bi bi-exclamation-diamond"></i>
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                أسباب الخطورة
+                            </h3>
+
+                            <p>
+                                {{ gemini.message }}
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    {% if gemini.reasons %}
+
+                        <ul class="reason-list">
+
+                            {% for reason in gemini.reasons %}
+
+                                <li>
+                                    {{ reason }}
+                                </li>
+
+                            {% endfor %}
+
+                        </ul>
+
+                    {% else %}
+
+                        <p class="alternative-unavailable mt-4">
+                            لم تتوفر أسباب تفصيلية لهذه النتيجة.
+                        </p>
+
+                    {% endif %}
+
+
+                    {% if gemini.recommendation %}
+
+                        <div class="recommendation-box">
+
+                            <span>
+                                <i class="bi bi-lightbulb"></i>
+                                التوصية
+                            </span>
+
+                            <p>
+                                {{ gemini.recommendation }}
+                            </p>
+
+                        </div>
+
+                    {% endif %}
+
+                </article>
+
+
+
+                <article class="glass-panel result-card reveal-card">
+
+                    <div class="section-heading">
+
+                        <span class="section-icon violet">
+                            <i class="bi bi-bar-chart"></i>
+                        </span>
+
+                        <div>
+
+                            <h3>
+                                العوامل الأكثر تأثيرًا
+                            </h3>
+
+                            <p>
+                                الأحمر يرفع الخطورة، والأخضر يقللها.
+                            </p>
+
+                        </div>
+
+                    </div>
+
+                    <div class="chart-box">
+                        <canvas id="shapChart"></canvas>
+                    </div>
+
+                    <div class="chart-legend">
+
+                        <span>
+                            <i class="legend-dot danger"></i>
+                            يزيد الخطورة
+                        </span>
+
+                        <span>
+                            <i class="legend-dot safe"></i>
+                            يقلل الخطورة
+                        </span>
+
+                    </div>
+
+                </article>
+
+            </div>
+
+
+            </article>
+
+
+
+            {{ shap_chart|json_script:"shap-data" }}
+
+        {% endif %}
+
+    </section>
+
+    {% endif %}
+
+</section>
+
+{% endblock %}
+
+
+{% block extra_scripts %}
+
+{% if decision and risk != "منخفض" %}
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const shapElement =
+        document.getElementById("shap-data");
+
+    const chartCanvas =
+        document.getElementById("shapChart");
+
+    if (!shapElement || !chartCanvas) {
+        return;
+    }
+
+    const shapData =
+        JSON.parse(shapElement.textContent);
+
+    const shapLabels =
+        shapData.map(function (item) {
+            return item.feature;
+        });
+
+    const shapValues =
+        shapData.map(function (item) {
+            return item.value;
+        });
+
+    const shapColors =
+        shapValues.map(function (value) {
+
+            if (value >= 0) {
+                return "rgba(213, 90, 74, 0.84)";
+            }
+
+           return "rgba(78, 138, 103, 0.84)";
+        });
+
+    const shapBorderColors =
+        shapValues.map(function (value) {
+
+            if (value >= 0) {
+                return "rgba(213, 90, 74, 1)";
+            }
+
+            return "rgba(78, 138, 103, 1)";
+        });
+
+    new Chart(
+        chartCanvas,
+        {
+            type: "bar",
+
+            data: {
+                labels: shapLabels,
+
+                datasets: [
+                    {
+                        label: "تأثير العامل",
+                        data: shapValues,
+
+                        backgroundColor: shapColors,
+                        borderColor: shapBorderColors,
+
+                        borderWidth: 1,
+                        borderRadius: 9,
+                        borderSkipped: false,
+
+                        barThickness: 19
+                    }
+                ]
+            },
+
+            options: {
+                indexAxis: "y",
+
+                responsive: true,
+                maintainAspectRatio: false,
+
+                animation: {
+                    duration: 1500,
+                    easing: "easeOutQuart",
+
+                    delay: function (context) {
+                        return context.dataIndex * 180;
+                    }
+                },
+
+                plugins: {
+                    legend: {
+                        display: false
+                    },
+
+                    tooltip: {
+                        backgroundColor:
+                            "rgba(37, 30, 69, .94)",
+
+                        padding: 13,
+                        displayColors: false,
+
+                        callbacks: {
+                            label: function (context) {
+
+                                const value =
+                                    Number(context.raw);
+
+                                return (
+                                    "درجة التأثير: " +
+                                    value.toFixed(4)
+                                );
+                            }
+                        }
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: {
+                            color:
+                                "rgba(95, 82, 146, .08)"
+                        },
+
+                        border: {
+                            display: false
+                        },
+
+                        ticks: {
+                            color: "#716a81"
+                        }
+                    },
+
+                    y: {
+                        grid: {
+                            display: false
+                        },
+
+                        border: {
+                            display: false
+                        },
+
+                        ticks: {
+                            color: "#4e4860",
+
+                            font: {
+                                size: 13,
+                                weight: "600"
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    );
+
+});
+
+</script>
+
+{% endif %}
+
+{% endblock %}
