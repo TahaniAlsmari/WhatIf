@@ -2,305 +2,165 @@
 
 # WhatIf
 
-### Financial Decision Support Platform
+### AI-Powered Financial Decision Support Platform
 
-A Django-based platform that combines **Large Language Models**,  
-**Machine Learning**, and **Explainable AI** to evaluate financial decisions before execution.
+Evaluate financial decisions before execution using **LLMs**, **Machine Learning**, and **Explainable AI**.
 
-<br>
-
-<img src="images/home.png" width="100%" alt="WhatIf Home Page">
-
-<br>
-
-![Django](https://img.shields.io/badge/Django-Web%20Framework-092E20?logo=django)
-![Python](https://img.shields.io/badge/Python-3.12-3776AB?logo=python&logoColor=white)
-![CatBoost](https://img.shields.io/badge/CatBoost-Machine%20Learning-EF7B45)
-![SHAP](https://img.shields.io/badge/SHAP-Explainable%20AI-5B5FC7)
-![LLM](https://img.shields.io/badge/LLM-Generative%20AI-8A5CF6)
+<p>
+<img src="images/home.png" width="900">
+</p>
 
 </div>
 
 ---
 
-## About
+# About
 
 **WhatIf** is an AI-powered financial decision support platform designed to help organizations evaluate high-impact financial decisions before execution.
 
-Instead of manually reviewing financial reports, spreadsheets, and multiple financial indicators, the user describes a decision in natural language, such as opening a new branch or purchasing equipment.
+Instead of manually reviewing financial reports and spreadsheets, users simply describe a decision in natural language.
 
-The platform then extracts the decision details, combines them with the company’s financial indicators, predicts the associated risk level, and explains the factors that influenced the prediction.
+The platform automatically:
 
-By combining an **LLM**, **CatBoost**, and **SHAP**, WhatIf provides faster, clearer, and more transparent financial decision support.
-
----
-
-## The Problem
-
-Organizations regularly make decisions involving significant financial impact, including:
-
-- Opening new branches
-- Purchasing equipment and assets
-- Expanding the workforce
-- Launching marketing campaigns
-- Entering new markets
-- Developing technical systems
-
-Evaluating these decisions often requires financial expertise, reviewing several reports, and calculating multiple indicators. This process can take considerable time, while some small or emerging organizations may not have dedicated financial analysts.
+- Understands the decision using an LLM.
+- Extracts key financial information.
+- Predicts the financial risk.
+- Explains why the prediction was made.
+- Provides transparent insights that support confident decision-making.
 
 ---
 
-## The Solution
+# Key Features
 
-WhatIf provides an intelligent assistant that allows the user to enter a financial decision in natural language.
-
-The platform:
-
-1. Understands the decision using an LLM.
-2. Extracts the decision type and estimated cost.
-3. Combines the decision with the company’s financial indicators.
-4. Predicts the risk level using CatBoost.
-5. Explains the prediction using SHAP.
-6. Displays the result through a clear and interactive interface.
-7. Stores previous analyses in a personalized decision dashboard.
+| | |
+|:--|:--|
+|  **Natural Language Understanding** | Analyze financial decisions written in natural language. |
+|  **Risk Prediction** | Predict risk using a CatBoost machine learning model. |
+|  **Explainable AI** | Explain every prediction with SHAP. |
+|  **Decision Dashboard** | View previous analyses and overall statistics. |
+|  **Authentication** | Secure user login and personal decision history. |
+|  **Decision Support** | Provide recommendations when high-risk decisions are detected. |
 
 ---
 
-## Key Features
-
-<table>
-<tr>
-<td width="50%">
-
-### Natural Language Analysis
-Users can describe financial decisions naturally without completing complex financial forms.
-
-</td>
-<td width="50%">
-
-### Risk Classification
-The platform classifies decisions as low, medium, or high risk.
-
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-
-### Explainable Predictions
-SHAP identifies the financial factors that contributed most to each prediction.
-
-</td>
-<td width="50%">
-
-### AI-Generated Explanation
-The prediction is transformed into a clear financial explanation that supports user understanding.
-
-</td>
-</tr>
-
-<tr>
-<td width="50%">
-
-### Decision Dashboard
-Users can review previous decisions and monitor their risk distribution.
-
-</td>
-<td width="50%">
-
-### User Authentication
-Each user has a secure account and an independent decision history.
-
-</td>
-</tr>
-</table>
-
----
-
-## System Workflow
+# Workflow
 
 ```text
-Natural Language Financial Decision
-                  │
-                  ▼
-        Large Language Model
-     Decision Type & Cost Extraction
-                  │
-                  ▼
-      Financial Feature Construction
-                  │
-                  ▼
-       CatBoost Risk Classification
-                  │
-          ┌───────┴───────┐
-          ▼               ▼
- SHAP Explainability   Risk Level
-          │               │
-          └───────┬───────┘
-                  ▼
-      AI-Generated Explanation
-                  │
-                  ▼
-       Financial Decision Report
+Financial Decision
+        │
+        ▼
+Large Language Model
+        │
+        ▼
+Decision & Cost Extraction
+        │
+        ▼
+Financial Feature Engineering
+        │
+        ▼
+CatBoost Risk Prediction
+        │
+        ▼
+SHAP Explainability
+        │
+        ▼
+AI Explanation
+        │
+        ▼
+Decision Support
 ```
 
 ---
 
-## Machine Learning
+# Screenshots
 
-Six machine learning models were trained and evaluated:
+## Landing Page
+
+<img src="images/home.png">
+
+The landing page provides a quick overview of the platform and allows users to start a new analysis or access previous decisions.
+
+---
+
+## Dashboard
+
+<img src="images/dashboard.png">
+
+The dashboard summarizes previous financial decisions, displays overall statistics, and provides users with a complete history of analyzed decisions.
+
+---
+
+## AI Decision Analysis
+
+<img src="images/analysis.png">
+
+After entering a financial decision, the platform:
+
+- Extracts the decision information.
+- Predicts the risk level.
+- Explains the prediction with SHAP.
+- Highlights the most influential financial indicators.
+- Presents AI-generated financial insights.
+- Recommends lower-risk alternatives when applicable.
+
+---
+
+# Technologies
+
+### Backend
+
+- Django
+- Python
+
+### Machine Learning
 
 - CatBoost
-- LightGBM
-- XGBoost
-- Random Forest
-- Decision Tree
-- Logistic Regression
+- SHAP
+- Scikit-learn
+- Pandas
 
-**CatBoost** was selected as the final model after achieving the best overall performance among the evaluated models.
+### Artificial Intelligence
 
-The final evaluation used **10-Fold Cross-Validation** to provide a more reliable estimate of model performance.
+- Google GenAI SDK (LLM)
 
-### Model Inputs
+### Frontend
 
-The prediction pipeline uses financial indicators such as:
+- HTML
+- CSS
+- JavaScript
 
-- Annual revenue
-- Operating expenses
-- Net profit
-- Profit margin
-- Number of employees
-- Total assets
-- Total debt
-- Debt-to-assets ratio
-- Cash flow
-- Decision type
-- Decision cost
+### Database
 
-### Risk Output
+- SQLite
 
-The model classifies each decision into one of three levels:
+---
+
+# Project Structure
 
 ```text
-Low Risk
-Medium Risk
-High Risk
-```
-
----
-
-## Explainable AI
-
-WhatIf uses **SHAP** to explain the model’s prediction.
-
-Instead of displaying only the final risk level, the platform shows which financial factors increased or decreased the predicted risk.
-
-This makes the result more transparent and allows financial analysts and decision-makers to verify the reasoning behind the model’s output.
-
----
-
-## Screenshots
-
-### Home Page
-
-<img src="images/home.png" width="100%" alt="WhatIf Home Page">
-
-The home page presents an overview of the user’s analyses and provides quick access to new decisions and previous records.
-
----
-
-### Decision Dashboard
-
-<img src="images/dashboard.png" width="100%" alt="WhatIf Decision Dashboard">
-
-The dashboard displays the total number of analyzed decisions, their risk distribution, and the user’s decision history.
-
----
-
-### AI Decision Analysis
-
-<img src="images/analysis.png" width="100%" alt="WhatIf Decision Analysis">
-
-The analysis page displays:
-
-- The extracted decision and cost
-- The predicted risk level
-- The financial reasons behind the prediction
-- The most influential factors according to SHAP
-- A clear recommendation based on the analysis
-
----
-
-## Technology Stack
-
-| Layer | Technologies |
-|---|---|
-| Backend | Django, Python |
-| Generative AI | Large Language Model |
-| Machine Learning | CatBoost, Scikit-learn |
-| Explainable AI | SHAP |
-| Data Processing | Pandas |
-| Frontend | HTML, CSS, JavaScript |
-| Database | SQLite |
-| Version Control | Git, GitHub |
-
----
-
-## Project Structure
-
-```text
-WhatIf/
+WhatIf
 │
-├── accounts/
-│   ├── Authentication views
-│   ├── Login and registration templates
-│   └── Authentication styling
+├── accounts
+│   └── User authentication
 │
-├── ml_app/
-│   ├── Machine learning pipeline
-│   ├── LLM integration
+├── ml_app
+│   ├── AI pipeline
+│   ├── Risk prediction
 │   ├── SHAP explainability
-│   ├── Decision dashboard
-│   ├── Templates and static files
-│   ├── Trained model
-│   └── Database migrations
+│   ├── Dashboard
+│   └── Business logic
 │
-├── whatif/
-│   ├── Django settings
-│   ├── Main URL configuration
-│   ├── ASGI configuration
-│   └── WSGI configuration
+├── whatif
+│   └── Django configuration
 │
 ├── manage.py
-├── requirements.txt
-└── .gitignore
+└── requirements.txt
 ```
-
----
-
-## Data
-
-The current prototype was developed using synthetic financial data representing hypothetical companies.
-
-Synthetic data was used because real organizational financial data is sensitive and generally not publicly available.
-
-The dataset includes company financial indicators, decision information, and corresponding risk classifications.
 
 ---
 
 ## Future Enhancements
 
-- Train and validate the platform using anonymized real-world financial data to improve prediction accuracy and reliability.
-- Expand the platform beyond financial institutions to support small, medium, and large companies across different industries.
-- Add an intelligent alternative-decision engine that recommends a lower-risk option whenever a financial decision is classified as high risk.
-
----
-
-## Important Notice
-
-This platform is a decision-support prototype and is not intended to replace professional financial analysis or human judgment.
-
-Its results should be reviewed by qualified decision-makers before being used in real financial environments.
-
-
-No permission is granted to copy, modify, distribute, reproduce, or use this source code or any part of it without prior written permission from the author.
+- Train and validate the platform using anonymized real financial data to improve prediction accuracy and reliability.
+- Expand the platform beyond the banking sector to support organizations of all sizes, including small, medium, and large enterprises across different industries.
+- Provide intelligent alternative recommendations for high-risk financial decisions, enabling users to compare safer options before execution.
